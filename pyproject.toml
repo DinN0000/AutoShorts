@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-collector = ["playwright>=1.40"]
+collector = ["playwright>=1.40", "yt-dlp>=2024.1"]
 editor = ["moviepy>=1.0", "openai-whisper>=20231117"]
 translator = ["edge-tts>=6.1"]
 validator = [

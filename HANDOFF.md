@@ -2,11 +2,17 @@
 
 > 마지막 업데이트: 2026-03-25
 
-## 프로젝트 상태: 기본 골격 완료, 실제 구현 필요
+## 프로젝트 상태: Collector 완전 구현, 나머지 모듈 구현 필요
 
 ### 완료된 것
 
 - **6개 모듈 골격** 전부 구현 (collector, validator, editor, translator, uploader, pipeline)
+- **Collector 4개 플랫폼 완전 구현** (Playwright 검색 + yt-dlp 다운로드)
+  - `douyin.py` — Douyin 검색/다운로드 구현
+  - `bilibili.py` — Bilibili 검색/다운로드 구현 (BV ID 추출, 시간 파싱 포함)
+  - `kuaishou.py` — Kuaishou 검색/다운로드 구현
+  - `xiaohongshu.py` — Xiaohongshu 검색/다운로드 구현 (비디오 인디케이터 감지)
+- **pyproject.toml** collector optional에 `yt-dlp>=2024.1` 의존성 추가
 - **CLI** 전체 커맨드 동작 (`autoshorts <command>`)
 - **3단계 저작권 검증 로직** 구현 및 테스트 통과 (Stage 1/2/3)
 - **적응형 수집 전략** 엔진 구현 (폐기 사유 분석 → 검색 방향 전환)
@@ -16,35 +22,27 @@
 - **파이프라인 상태 관리** 구현 (7단계 상태 추적)
 - **Config 파일** 3개 (platforms.yaml, languages.yaml, schedule.yaml)
 - **OpenClaw 가이드** 5개 문서 + 3개 스킬 + 8개 훅 스크립트
-- **테스트** 32개 전부 통과
+- **테스트** 59개 전부 통과 (adapter 테스트 27개 추가)
 - **GitHub** https://github.com/DinN0000/AutoShorts
 
 ### 아직 스텁(stub)인 것 — 다음에 구현해야 할 것
 
 우선순위 순서:
 
-#### 1. Playwright 크롤러 (Collector 실제 구현)
-- `src/autoshorts/collector/douyin.py` — Douyin 검색/다운로드
-- `src/autoshorts/collector/bilibili.py` — Bilibili 검색/다운로드
-- `src/autoshorts/collector/kuaishou.py` — Kuaishou 검색/다운로드
-- `src/autoshorts/collector/xiaohongshu.py` — XHS 검색/다운로드
-- 모두 `NotImplementedError` 상태
-- `playwright install` 필요
-
-#### 2. Whisper + Claude 연동 (Editor AI 기능)
+#### 1. Whisper + Claude 연동 (Editor AI 기능)
 - `src/autoshorts/editor/narration.py` — `transcribe_audio()` Whisper 로컬 실행
 - `src/autoshorts/editor/narration.py` — `generate_storyline()` Claude 구독 토큰으로 스토리라인 생성
 - `src/autoshorts/editor/runner.py` — 실제 FFmpeg 파이프라인 실행
 
-#### 3. Claude Vision 연동 (Validator Stage 3)
+#### 2. Claude Vision 연동 (Validator Stage 3)
 - `src/autoshorts/validator/stage3.py` — 현재 외부에서 `risk_score` 주입 방식
 - 실제로는 영상 프레임 샘플링 → Claude Vision 분석 필요
 
-#### 4. 번역 연동 (Translator)
+#### 3. 번역 연동 (Translator)
 - `src/autoshorts/translator/runner.py` — Claude 구독으로 다중 언어 번역
 - edge-tts 호출은 구현되어 있으나 번역 텍스트가 없으면 의미 없음
 
-#### 5. 플랫폼 API 연동 (Uploader)
+#### 4. 플랫폼 API 연동 (Uploader)
 - `src/autoshorts/uploader/youtube.py` — YouTube Data API v3 OAuth + 업로드
 - `src/autoshorts/uploader/tiktok.py` — TikTok API
 - `src/autoshorts/uploader/instagram.py` — Instagram Graph API
@@ -53,14 +51,14 @@
 - `src/autoshorts/uploader/snapchat.py` — Snapchat API
 - API 키 설정 필요 (`config/secrets.yaml`)
 
-#### 6. ~~Stage 1 유튜브 유사도 검색~~ ✅ 완료
+#### 5. ~~Stage 1 유튜브 유사도 검색~~ ✅ 완료
 - `src/autoshorts/validator/youtube_similarity.py` — YouTube Data API v3 검색, fuzzywuzzy 텍스트 유사도, OpenCV 썸네일 유사도
 - `src/autoshorts/validator/stage1.py` — 하드 게이트 통합 (75% 이상 유사 시 +100점 → 자동 폐기)
 - API 키: 환경변수 `YOUTUBE_API_KEY` 우선, `config/secrets.yaml` fallback
 - 테스트 16개 추가 (`tests/validator/test_youtube_similarity.py`), 전체 48개 통과
 - 의존성: `fuzzywuzzy`, `python-Levenshtein`, `opencv-python`, `google-api-python-client` (optional `[validator]`)
 
-#### 7. 누락된 문서
+#### 6. 누락된 문서
 - `docs/architecture/` (overview.md, data-flow.md, copyright-policy.md)
 - `docs/modules/` (collector.md, validator.md, editor.md, translator.md, uploader.md)
 - `docs/setup/` (installation.md, api-keys.md, platform-accounts.md)
