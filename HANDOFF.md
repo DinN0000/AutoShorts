@@ -1,6 +1,6 @@
 # AutoShorts 핸드오프 문서
 
-> 마지막 업데이트: 2026-03-25
+> 마지막 업데이트: 2026-03-26
 
 ## 프로젝트 상태: Collector 완전 구현, 나머지 모듈 구현 필요
 
@@ -34,9 +34,12 @@
 - `src/autoshorts/editor/narration.py` — `generate_storyline()` Claude 구독 토큰으로 스토리라인 생성
 - `src/autoshorts/editor/runner.py` — 실제 FFmpeg 파이프라인 실행
 
-#### 2. Claude Vision 연동 (Validator Stage 3)
-- `src/autoshorts/validator/stage3.py` — 현재 외부에서 `risk_score` 주입 방식
-- 실제로는 영상 프레임 샘플링 → Claude Vision 분석 필요
+#### 2. ~~Claude Vision 연동 (Validator Stage 3)~~ ✅ 완료
+- `src/autoshorts/validator/vision.py` — OpenCV 프레임 추출 (10초 간격) + Claude Vision API 분석
+- `src/autoshorts/validator/stage3.py` — `FinalCheckInput.video_path` 추가, Vision 점수 병합 (기존 70% + Vision 30%)
+- Vision 검출 항목: 로고/워터마크, 저작권 캐릭터, 방송 오버레이, 스튜디오 제작 징후, 크리에이터 텍스트
+- 의존성: `anthropic>=0.39` (optional `[validator]`)
+- 테스트 13개 통과 (`tests/validator/test_stage3.py`)
 
 #### 3. 번역 연동 (Translator)
 - `src/autoshorts/translator/runner.py` — Claude 구독으로 다중 언어 번역

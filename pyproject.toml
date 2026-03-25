@@ -22,6 +22,7 @@ validator = [
     "python-Levenshtein>=0.21",
     "opencv-python>=4.8",
     "google-api-python-client>=2.100",
+    "anthropic>=0.39",
 ]
 uploader = [
     "google-api-python-client>=2.100",
