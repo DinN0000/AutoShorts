@@ -36,7 +36,36 @@ def edit(input_dir: Path, retry_id: str | None):
 @click.option("--langs", type=str, default="en,ko,ja")
 def translate(input_dir: Path, langs: str):
     """Translate and localize videos to multiple languages."""
-    click.echo("Translate — not yet implemented")
+    import asyncio
+    from autoshorts.translator.runner import translate_and_localize
+    from autoshorts.common.storage import DIRS, ensure_dirs
+
+    ensure_dirs()
+    lang_list = [l.strip() for l in langs.split(",")]
+    click.echo(f"Translating to {len(lang_list)} languages: {', '.join(lang_list)}")
+
+    # Look for text files in input directory to translate
+    text_files = list(input_dir.glob("*.txt"))
+    if not text_files:
+        click.echo("No text files found in input directory.")
+        return
+
+    for text_file in text_files:
+        text = text_file.read_text(encoding="utf-8")
+        video_id = text_file.stem
+        click.echo(f"Processing: {video_id}")
+
+        for lang in lang_list:
+            output_dir = DIRS["localized"] / video_id / lang
+            try:
+                result = asyncio.run(
+                    translate_and_localize(text, lang, str(output_dir))
+                )
+                click.echo(f"  {lang}: SRT={result['srt_path']}")
+            except Exception as e:
+                click.echo(f"  {lang}: FAILED — {e}", err=True)
+
+    click.echo("Translation complete.")
 
 
 @main.group()

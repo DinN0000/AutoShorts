@@ -22,7 +22,8 @@
 - **파이프라인 상태 관리** 구현 (7단계 상태 추적)
 - **Config 파일** 3개 (platforms.yaml, languages.yaml, schedule.yaml)
 - **OpenClaw 가이드** 5개 문서 + 3개 스킬 + 8개 훅 스크립트
-- **테스트** 59개 전부 통과 (adapter 테스트 27개 추가)
+- **Claude API 번역 기능** 완전 구현 (9개 언어 텍스트/자막/메타데이터 번역)
+- **테스트** 59개 + 번역 7개 전부 통과
 - **GitHub** https://github.com/DinN0000/AutoShorts
 
 ### 아직 스텁(stub)인 것 — 다음에 구현해야 할 것
@@ -41,9 +42,13 @@
 - 의존성: `anthropic>=0.39` (optional `[validator]`)
 - 테스트 13개 통과 (`tests/validator/test_stage3.py`)
 
-#### 3. 번역 연동 (Translator)
-- `src/autoshorts/translator/runner.py` — Claude 구독으로 다중 언어 번역
-- edge-tts 호출은 구현되어 있으나 번역 텍스트가 없으면 의미 없음
+#### 3. ~~번역 연동 (Translator)~~ ✅ 완료
+- `src/autoshorts/translator/runner.py` — Claude Haiku API로 9개 언어 번역 구현
+- `translate_text()` — 텍스트 번역, `translate_metadata()` — 제목/설명 번역, `translate_srt_entries()` — 자막 번역
+- CLI `autoshorts translate --input <path> --langs en,ko,ja` 동작
+- 환경변수 `ANTHROPIC_API_KEY` 필요
+- 의존성: `anthropic>=0.42` (optional `[translator]`)
+- 테스트 7개 추가 (`tests/translator/test_runner.py`)
 
 #### 4. 플랫폼 API 연동 (Uploader)
 - `src/autoshorts/uploader/youtube.py` — YouTube Data API v3 OAuth + 업로드
