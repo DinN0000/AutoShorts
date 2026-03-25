@@ -17,12 +17,18 @@ dependencies = [
 collector = ["playwright>=1.40"]
 editor = ["moviepy>=1.0", "openai-whisper>=20231117"]
 translator = ["edge-tts>=6.1"]
+validator = [
+    "fuzzywuzzy>=0.18",
+    "python-Levenshtein>=0.21",
+    "opencv-python>=4.8",
+    "google-api-python-client>=2.100",
+]
 uploader = [
     "google-api-python-client>=2.100",
     "google-auth-oauthlib>=1.1",
 ]
 dev = ["pytest>=7.4", "pytest-asyncio>=0.21"]
-all = ["autoshorts[collector,editor,translator,uploader,dev]"]
+all = ["autoshorts[collector,editor,translator,uploader,validator,dev]"]
 
 [project.scripts]
 autoshorts = "autoshorts.cli:main"

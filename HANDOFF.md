@@ -53,9 +53,12 @@
 - `src/autoshorts/uploader/snapchat.py` — Snapchat API
 - API 키 설정 필요 (`config/secrets.yaml`)
 
-#### 6. Stage 1 유튜브 유사도 검색
-- 설계 문서에 명시되어 있으나 아직 미구현
-- 수집된 영상이 이미 유튜브에 존재하는지 확인하는 기능
+#### 6. ~~Stage 1 유튜브 유사도 검색~~ ✅ 완료
+- `src/autoshorts/validator/youtube_similarity.py` — YouTube Data API v3 검색, fuzzywuzzy 텍스트 유사도, OpenCV 썸네일 유사도
+- `src/autoshorts/validator/stage1.py` — 하드 게이트 통합 (75% 이상 유사 시 +100점 → 자동 폐기)
+- API 키: 환경변수 `YOUTUBE_API_KEY` 우선, `config/secrets.yaml` fallback
+- 테스트 16개 추가 (`tests/validator/test_youtube_similarity.py`), 전체 48개 통과
+- 의존성: `fuzzywuzzy`, `python-Levenshtein`, `opencv-python`, `google-api-python-client` (optional `[validator]`)
 
 #### 7. 누락된 문서
 - `docs/architecture/` (overview.md, data-flow.md, copyright-policy.md)
