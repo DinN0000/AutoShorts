@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autoshorts"
+version = "0.1.0"
+description = "Automated animal shorts pipeline with copyright-safe multi-platform publishing"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+collector = ["playwright>=1.40"]
+editor = ["moviepy>=1.0", "openai-whisper>=20231117"]
+translator = ["edge-tts>=6.1"]
+uploader = [
+    "google-api-python-client>=2.100",
+    "google-auth-oauthlib>=1.1",
+]
+dev = ["pytest>=7.4", "pytest-asyncio>=0.21"]
+all = ["autoshorts[collector,editor,translator,uploader,dev]"]
+
+[project.scripts]
+autoshorts = "autoshorts.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autoshorts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

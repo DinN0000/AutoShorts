@@ -1,0 +1,13 @@
+data/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+.env
+config/secrets.yaml
