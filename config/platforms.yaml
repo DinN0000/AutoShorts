@@ -1,0 +1,44 @@
+# config/platforms.yaml
+collector:
+  douyin:
+    enabled: true
+    base_url: "https://www.douyin.com"
+    max_per_session: 50
+  kuaishou:
+    enabled: true
+    base_url: "https://www.kuaishou.com"
+    max_per_session: 50
+  bilibili:
+    enabled: true
+    base_url: "https://www.bilibili.com"
+    max_per_session: 50
+  xiaohongshu:
+    enabled: true
+    base_url: "https://www.xiaohongshu.com"
+    max_per_session: 50
+
+uploader:
+  youtube:
+    enabled: true
+    daily_limit_per_channel: 2
+    api: "data_api_v3"
+  tiktok:
+    enabled: true
+    daily_limit_per_channel: 2
+    api: "tiktok_api"
+  instagram:
+    enabled: true
+    daily_limit_per_channel: 2
+    api: "graph_api"
+  facebook:
+    enabled: true
+    daily_limit_per_channel: 2
+    api: "graph_api"
+  threads:
+    enabled: true
+    daily_limit_per_channel: 2
+    api: "threads_api"
+  snapchat:
+    enabled: true
+    daily_limit_per_channel: 1
+    api: "snapchat_api"

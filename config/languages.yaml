@@ -1,0 +1,70 @@
+# config/languages.yaml
+languages:
+  # Tier 1 - High CPM ($15-40)
+  en:
+    name: "English"
+    tier: 1
+    targets: ["US", "UK", "CA", "AU"]
+    tts_voice: "en-US-AriaNeural"
+    channel_suffix: "EN"
+    content_style: "funny/surprising"
+  de:
+    name: "German"
+    tier: 1
+    targets: ["DE", "AT", "CH"]
+    tts_voice: "de-DE-KatjaNeural"
+    channel_suffix: "DE"
+    content_style: "informative"
+  ja:
+    name: "Japanese"
+    tier: 1
+    targets: ["JP"]
+    tts_voice: "ja-JP-NanamiNeural"
+    channel_suffix: "JP"
+    content_style: "kawaii/cute"
+
+  # Tier 2 - Medium CPM ($5-15)
+  ko:
+    name: "Korean"
+    tier: 2
+    targets: ["KR"]
+    tts_voice: "ko-KR-SunHiNeural"
+    channel_suffix: "KR"
+    content_style: "cute/heartwarming"
+  fr:
+    name: "French"
+    tier: 2
+    targets: ["FR", "BE", "CA"]
+    tts_voice: "fr-FR-DeniseNeural"
+    channel_suffix: "FR"
+    content_style: "charming"
+  es:
+    name: "Spanish"
+    tier: 2
+    targets: ["ES", "MX"]
+    tts_voice: "es-ES-ElviraNeural"
+    channel_suffix: "ES"
+    content_style: "fun/energetic"
+  pt:
+    name: "Portuguese"
+    tier: 2
+    targets: ["BR"]
+    tts_voice: "pt-BR-FranciscaNeural"
+    channel_suffix: "BR"
+    content_style: "fun/energetic"
+
+  # Tier 3 - Volume (CPM $1-5)
+  hi:
+    name: "Hindi"
+    tier: 3
+    targets: ["IN"]
+    tts_voice: "hi-IN-SwaraNeural"
+    channel_suffix: "IN"
+    content_style: "entertaining"
+  ar:
+    name: "Arabic"
+    tier: 3
+    targets: ["SA", "AE"]
+    tts_voice: "ar-SA-ZariyahNeural"
+    channel_suffix: "AR"
+    content_style: "family-friendly"

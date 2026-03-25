@@ -59,8 +59,29 @@ def pipeline():
 def run(platform: str, limit: int):
     """Collect videos from specified platform(s)."""
     import asyncio
-    from autoshorts.collector.runner import collect
-    results = asyncio.run(collect(platform, limit))
+    from autoshorts.collector.base import PlatformAdapter
+    from autoshorts.collector.douyin import DouyinAdapter
+    from autoshorts.collector.bilibili import BilibiliAdapter
+    from autoshorts.collector.kuaishou import KuaishouAdapter
+    from autoshorts.collector.xiaohongshu import XiaohongshuAdapter
+    from autoshorts.collector.runner import CollectorRunner
+    from autoshorts.common.storage import DIRS, ensure_dirs
+
+    ensure_dirs()
+    all_adapters: dict[str, PlatformAdapter] = {
+        "douyin": DouyinAdapter(),
+        "kuaishou": KuaishouAdapter(),
+        "bilibili": BilibiliAdapter(),
+        "xiaohongshu": XiaohongshuAdapter(),
+    }
+
+    if platform == "all":
+        adapters = list(all_adapters.values())
+    else:
+        adapters = [all_adapters[platform]]
+
+    runner = CollectorRunner(adapters)
+    results = asyncio.run(runner.collect(DIRS["raw"], limit))
     click.echo(f"Collected {len(results)} videos")
 
 
@@ -90,9 +111,13 @@ def source(input_dir: Path):
     click.echo(f"Validated {len(results)} videos: {passed} passed, {len(results) - passed} rejected")
 
     stats = generate_rejection_stats(results)
-    if stats.rejection_rate > 0.5:
-        click.echo(f"WARNING: High rejection rate ({stats.rejection_rate:.0%})")
-        click.echo(f"Top reason: {stats.top_reason}")
+    rejection_rate = stats["rejected"] / stats["total"] if stats["total"] > 0 else 0
+    if rejection_rate > 0.5:
+        click.echo(f"WARNING: High rejection rate ({rejection_rate:.0%})")
+        top_reasons = stats.get("common_reasons", {})
+        if top_reasons:
+            top = max(top_reasons, key=top_reasons.get)
+            click.echo(f"Top reason: {top}")
 
 
 @validate.command()
@@ -123,7 +148,7 @@ def upload_run(input_dir: Path, platforms: str):
     click.echo("Upload — not yet implemented")
 
 
-@upload.command()
+@upload.command("status")
 def upload_status():
     """Show upload status."""
     click.echo("Upload status — not yet implemented")
@@ -134,7 +159,8 @@ def schedule():
     """Show optimal upload schedule per language."""
     from autoshorts.uploader.scheduler import TIMEZONE_MAP
     for lang, info in TIMEZONE_MAP.items():
-        click.echo(f"  {lang}: {info['country']} primetime {info['primetime_start']}:00-{info['primetime_end']}:00")
+        country, _, prime_start, prime_end = info
+        click.echo(f"  {lang}: {country} primetime {prime_start}:00-{prime_end}:00")
 
 
 # --- Pipeline subcommands ---

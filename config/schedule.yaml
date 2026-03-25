@@ -1,0 +1,18 @@
+# config/schedule.yaml
+# Upload schedule — primetime hours in local timezone
+schedule:
+  en: { tz: "America/New_York", hours: [18, 19, 20] }
+  ko: { tz: "Asia/Seoul", hours: [19, 20, 21] }
+  ja: { tz: "Asia/Tokyo", hours: [19, 20, 21] }
+  de: { tz: "Europe/Berlin", hours: [18, 19, 20] }
+  fr: { tz: "Europe/Paris", hours: [18, 19, 20] }
+  es: { tz: "Europe/Madrid", hours: [19, 20, 21] }
+  pt: { tz: "America/Sao_Paulo", hours: [19, 20, 21] }
+  hi: { tz: "Asia/Kolkata", hours: [19, 20, 21] }
+  ar: { tz: "Asia/Riyadh", hours: [20, 21, 22] }
+
+pipeline:
+  # How many times to run collector per day
+  collect_runs_per_day: 3
+  # Max videos to collect per run
+  collect_limit: 200
