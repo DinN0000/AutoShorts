@@ -2,7 +2,7 @@
 
 > 마지막 업데이트: 2026-03-26
 
-## 프로젝트 상태: Collector 완전 구현, 나머지 모듈 구현 필요
+## 프로젝트 상태: Collector + Uploader 완전 구현, 나머지 모듈 구현 필요
 
 ### 완료된 것
 
@@ -19,11 +19,21 @@
 - **FFmpeg 필터 빌더** 구현 (속도/반전/크롭/색보정/줌)
 - **SRT 자막 생성기** 구현
 - **업로드 스케줄러** 구현 (9개 언어 타임존/프라임타임)
+- **6개 플랫폼 업로더 API 구현** (YouTube/TikTok/Instagram/Facebook/Threads/Snapchat)
+  - 공통 헬퍼: `_helpers.py` — secrets.yaml 로드 + 재시도 로직 (5초→10초→20초)
+  - `youtube.py` — YouTube Data API v3 multipart 업로드
+  - `tiktok.py` — TikTok Content Posting API (init → binary upload)
+  - `instagram.py` — Instagram Graph API (container → poll → publish)
+  - `facebook.py` — Facebook Graph API (init → upload → finish)
+  - `threads.py` — Threads Publishing API (container → poll → publish)
+  - `snapchat.py` — Snap Marketing API (create media → upload binary)
+  - 의존성: `aiohttp>=3.9` 추가 (pyproject.toml uploader optional)
+  - 테스트 27개 추가 (`tests/uploader/test_uploaders.py`), 전체 30개 통과
 - **파이프라인 상태 관리** 구현 (7단계 상태 추적)
 - **Config 파일** 3개 (platforms.yaml, languages.yaml, schedule.yaml)
 - **OpenClaw 가이드** 5개 문서 + 3개 스킬 + 8개 훅 스크립트
 - **Claude API 번역 기능** 완전 구현 (9개 언어 텍스트/자막/메타데이터 번역)
-- **테스트** 59개 + 번역 7개 전부 통과
+- **테스트** 전부 통과 (uploader 27개 + 번역 7개 포함)
 - **GitHub** https://github.com/DinN0000/AutoShorts
 
 ### 아직 스텁(stub)인 것 — 다음에 구현해야 할 것
@@ -50,14 +60,16 @@
 - 의존성: `anthropic>=0.42` (optional `[translator]`)
 - 테스트 7개 추가 (`tests/translator/test_runner.py`)
 
-#### 4. 플랫폼 API 연동 (Uploader)
-- `src/autoshorts/uploader/youtube.py` — YouTube Data API v3 OAuth + 업로드
-- `src/autoshorts/uploader/tiktok.py` — TikTok API
-- `src/autoshorts/uploader/instagram.py` — Instagram Graph API
-- `src/autoshorts/uploader/facebook.py` — Facebook Graph API
-- `src/autoshorts/uploader/threads.py` — Threads API
-- `src/autoshorts/uploader/snapchat.py` — Snapchat API
-- API 키 설정 필요 (`config/secrets.yaml`)
+#### ~~4. 플랫폼 API 연동 (Uploader)~~ ✅ 완료
+- 6개 플랫폼 전부 구현 (YouTube/TikTok/Instagram/Facebook/Threads/Snapchat)
+- 공통 헬퍼: secrets.yaml 로드 (환경변수 우선) + 재시도 로직 (5→10→20초)
+- API 키 설정 필요 (`config/secrets.yaml`) — 플랫폼별 필요 키:
+  - youtube: `access_token`
+  - tiktok: `access_token`
+  - instagram: `access_token`, `user_id`, `video_host_url`
+  - facebook: `access_token`, `page_id`
+  - threads: `access_token`, `user_id`, `video_host_url`
+  - snapchat: `access_token`, `org_id`
 
 #### 5. ~~Stage 1 유튜브 유사도 검색~~ ✅ 완료
 - `src/autoshorts/validator/youtube_similarity.py` — YouTube Data API v3 검색, fuzzywuzzy 텍스트 유사도, OpenCV 썸네일 유사도

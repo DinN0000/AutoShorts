@@ -25,6 +25,7 @@ validator = [
     "anthropic>=0.39",
 ]
 uploader = [
+    "aiohttp>=3.9",
     "google-api-python-client>=2.100",
     "google-auth-oauthlib>=1.1",
 ]
